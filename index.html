@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta property="og:title" content="Akshay S. Pakhare — multiphysics of materials that break">
 <meta property="og:description" content="Mechanics of batteries, polymers and tissue: in situ experiments, coupled models, open tutorials.">
@@ -560,10 +559,13 @@ footer a,footer span{font-family:var(--head);font-size:13px;letter-spacing:.16em
 footer a:hover{color:var(--white)}
 @media (max-width:480px){footer .in{padding-inline:16px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ---------- visit counter ---------- */
+.vc{font-family:var(--mono);font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;letter-spacing:.06em}
+.vc b{color:var(--grey);font-weight:400}
 </style>
 </head>
 <body>
-<title>Akshay Pakhare</title>
 <meta name="description" content="Akshay S. Pakhare — postdoctoral researcher in multiphysics across mechanical engineering, materials science and electrochemistry. Brown University.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -5163,6 +5165,7 @@ footer a:hover{color:var(--white)}
 
 <footer><div class="in">
   <span>© 2026 Akshay S. Pakhare · Brown University</span>
+  <span class="vc" id="visitCount" hidden>· <b id="visitCountN">—</b> visits</span>
   <nav>
     <a href="mailto:akshay_pakhare@brown.edu">Email</a>
     <a href="AkshayPakhare_CV.pdf" target="_blank" rel="noopener">CV</a>
@@ -8098,5 +8101,23 @@ dotChart('jcH',[{x:.3,m:389.04,s:74.07,n:5},{x:.6,m:664.45,s:52.40,n:2},{x:.9,m:
 route();
 </script>
 
+<!-- ---------- GoatCounter ----------
+     Replace MYCODE (3 places below) with your GoatCounter site code.      -->
+<script data-goatcounter="https://MYCODE.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+<script>
+(function(){
+  var CODE='MYCODE';
+  if(CODE==='MY'+'CODE') return;            // not configured yet: stay hidden
+  fetch('https://'+CODE+'.goatcounter.com/counter/TOTAL.json')
+    .then(function(r){ if(!r.ok) throw 0; return r.json() })
+    .then(function(d){
+      if(!d || !d.count) return;
+      document.getElementById('visitCountN').textContent=d.count;
+      document.getElementById('visitCount').hidden=false;
+    })
+    .catch(function(){ /* counter simply stays hidden */ });
+})();
+</script>
 </body>
 </html>
