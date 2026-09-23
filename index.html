@@ -1324,7 +1324,7 @@ footer a:hover{color:var(--white)}
       <a href="#roadmap"><h3>Program managers</h3><p>Roadmap, materials supply and where my methods fit.</p><b>See the roadmap →</b></a>
       <a href="#collaboration"><h3>Collaborators and students</h3><p>Experiments, models and open tools available for new projects.</p><b>Collaborate →</b></a>
     </div>
-    <div class="btns" style="margin-top:32px"><a class="btn solid" href="mailto:akshay_pakhare@brown.edu">Email me</a><a class="btn" href="AkshayPakhare_CV.pdf" target="_blank" rel="noopener">CV (PDF)</a><a class="btn" href="https://scholar.google.com/citations?user=m2Dc0rEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a><a class="btn" href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a></div>
+    <div class="btns" style="margin-top:32px"><a class="btn solid" href="#" data-eml>Email me</a><a class="btn" href="AkshayPakhare_CV.pdf" target="_blank" rel="noopener">CV (PDF)</a><a class="btn" href="https://scholar.google.com/citations?user=m2Dc0rEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a><a class="btn" href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a></div>
   </section>
 </div>
 
@@ -1444,7 +1444,7 @@ footer a:hover{color:var(--white)}
       <div><span class="k">For the community</span><h5>Open methods and training</h5><p>Tutorials, code and data that other labs can reuse, and a record of mentoring undergraduate and pre-college researchers.</p></div>
     </div>
     <p class="fine" style="margin-top:14px">Relevant to agencies working on energy storage, critical materials and safety. The 2025 critical minerals list was finalized by the Department of the Interior with input from the Departments of Energy, War and Agriculture. Sources: <a href="https://www.energy.gov/cmei/articles/battery500-progress-update" target="_blank" rel="noopener">DOE Battery500</a> · <a href="https://www.energy.gov/eere/vehicles/batteries-charging-and-electric-vehicles" target="_blank" rel="noopener">DOE VTO</a> · <a href="https://www.usgs.gov/publications/mineral-commodity-summaries-2026" target="_blank" rel="noopener">USGS MCS 2026</a> · <a href="https://www.federalregister.gov/documents/2025/11/07/2025-19813/final-2025-list-of-critical-minerals" target="_blank" rel="noopener">Final 2025 List of Critical Minerals</a>.</p>
-    <div class="btns" style="margin-top:28px"><a class="btn" href="#collaboration">Collaborate</a><a class="btn" href="#research/materials">Materials page</a><a class="btn" href="mailto:akshay_pakhare@brown.edu">Contact</a></div>
+    <div class="btns" style="margin-top:28px"><a class="btn" href="#collaboration">Collaborate</a><a class="btn" href="#research/materials">Materials page</a><a class="btn" href="#" data-eml>Contact</a></div>
   </article>
   <nav class="pager" aria-label="More"><a href="#vision"><span>← Back</span>Vision</a><a class="nx" href="#record"><span>Next →</span>Track record</a></nav>
 </div>
@@ -2544,7 +2544,7 @@ footer a:hover{color:var(--white)}
         <a class="doc" href="https://pubmed.ncbi.nlm.nih.gov/41234525/" target="_blank" rel="noopener"><b>PubMed / PMC</b><span>Open-access ACS AEM 2025 article ↗</span></a>
         <a class="doc off" aria-disabled="true"><b>ORCID</b><span>iD to be added</span></a>
       </div>
-      <div class="btns" style="margin-top:28px"><a class="btn solid" href="mailto:akshay_pakhare@brown.edu">akshay_pakhare@brown.edu</a><a class="btn" href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a></div>
+      <div class="btns" style="margin-top:28px"><a class="btn solid" href="#" data-eml data-eml-text>Email me</a><a class="btn" href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a></div>
     </div>
   </article>
 </div>
@@ -2777,7 +2777,7 @@ footer a:hover{color:var(--white)}
       <p class="kicker">Collaboration</p>
       <h1>Let's solve coupled problems</h1>
       <p class="sub">If your problem involves mechanics, materials and chemistry together, I can bring both the experiment and the model.</p>
-      <div class="btns"><a class="btn" href="mailto:akshay_pakhare@brown.edu">Email me</a><a class="btn" href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://scholar.google.com/citations?user=m2Dc0rEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Scholar</a></div>
+      <div class="btns"><a class="btn" href="#" data-eml>Email me</a><a class="btn" href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a><a class="btn" href="https://scholar.google.com/citations?user=m2Dc0rEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Scholar</a></div>
     </div>
   </section>
 
@@ -5167,7 +5167,7 @@ footer a:hover{color:var(--white)}
   <span>© 2026 Akshay S. Pakhare · Brown University</span>
   <span class="vc" id="visitCount" hidden>· <b id="visitCountN">—</b> visits</span>
   <nav>
-    <a href="mailto:akshay_pakhare@brown.edu">Email</a>
+    <a href="#" data-eml>Email</a>
     <a href="AkshayPakhare_CV.pdf" target="_blank" rel="noopener">CV</a>
     <a href="https://scholar.google.com/citations?user=m2Dc0rEAAAAJ&amp;hl=en" target="_blank" rel="noopener">Scholar</a>
     <a href="https://www.linkedin.com/in/akshayspakhare/" target="_blank" rel="noopener">LinkedIn</a>
@@ -8117,6 +8117,22 @@ route();
       document.getElementById('visitCount').hidden=false;
     })
     .catch(function(){ /* counter simply stays hidden */ });
+})();
+</script>
+<script>
+/* Email is assembled at runtime so address-harvesting bots (which do not run
+   JS) find nothing in the served HTML. Humans get a normal mailto link. */
+(function(){
+  var E='YWtzaGF5X3Bha2hhcmVAYnJvd24uZWR1';
+  function build(){
+    var a=atob(E);
+    document.querySelectorAll('[data-eml]').forEach(function(el){
+      el.setAttribute('href','mailto:'+a);
+      if(el.hasAttribute('data-eml-text')) el.textContent=a;
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build);
+  else build();
 })();
 </script>
 </body>
