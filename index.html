@@ -2809,11 +2809,13 @@ footer a:hover{color:var(--white)}
       <ul class="list">
         <li><div class="yr">Brown</div><div><h4>Prof. Pradeep Guduru · Prof. Lucas Caretta</h4><p>School of Engineering · postdoctoral advisors</p></div></li>
         <li><div class="yr">Brown</div><div><h4>Prof. Brian Sheldon · Prof. Anita Shukla · Prof. Vikas Srivastava · Prof. Greg Hirth</h4><p>Co-authors on solid-electrolyte and biomaterials work</p></div></li>
+        <li><div class="yr">Brown</div><div><h4>Dr. Cameron Meyers</h4><p>Co-author on dendrite evolution in solid electrolytes</p></div></li>
+        <li><div class="yr">UConn</div><div><h4>Dr. Naba Karan</h4><p>Co-author on solid-electrolyte and hard-carbon work</p></div></li>
         <li><div class="yr">MSU</div><div><h4>Prof. Siva Nadimpalli</h4><p>Mechanical Engineering · PhD advisor</p></div></li>
         <li><div class="yr">NJIT</div><div><h4>Prof. Shawn Chester</h4><p>Mechanical Engineering · coupled theories and finite element modeling</p></div></li>
         <li><div class="yr">Industry</div><div><h4>Dr. Vijay Sethuraman</h4><p>Faraday Laboratory · Birla Carbon · M.E. thesis advisor</p></div></li>
         <li><div class="yr">UMass Lowell</div><div><h4>Prof. Amir Ameli</h4><p>Plastics Engineering · multi-material 3D printing</p></div></li>
-        <li><div class="yr">Other</div><div><h4>Prof. Feng Lin</h4><p>Battery materials</p></div></li>
+        <li><div class="yr">Brown</div><div><h4>Prof. Feng Lin</h4><p>Battery materials</p></div></li>
       </ul>
     </div>
   </article>
@@ -6733,7 +6735,7 @@ const PUBS=[
  {y:2024,t:'Measurement of binder/active material interface fracture in rechargeable batteries and the effect of oxide coating',a:'<b>Pakhare</b>, Nadimpalli',j:'J. Appl. Mech. 91(4), 041009',doi:'10.1115/1.4064209',s:'pub',first:1,area:'Li-ion'},
  {y:2023,t:'Characterization and prediction of polymer/active material interface failure in battery electrodes',a:'<b>Pakhare</b>, Nadimpalli',j:'Exp. Mech. 63, 363–376',doi:'10.1007/s11340-022-00924-9',s:'pub',first:1,cover:1,area:'Li-ion'},
  {y:2021,t:'Measurement of volume changes and associated stresses in Ge electrodes due to Na/Na<sup>+</sup> redox reactions',a:'Rakshit, <b>Pakhare</b>, Ruiz, Khoshi, Detsi, He, Sethuraman, Nadimpalli',j:'J. Electrochem. Soc. 168, 010504',doi:'10.1149/1945-7111/abd5fc',s:'pub',area:'Na-ion'},
- {t:'Mechanistic understanding of sodium storage from operando stress measurements in hard-carbon thin films',a:'<b>Pakhare</b>, Karan, Guduru',s:'sub',first:1,area:'Na-ion'},
+ {t:'Mechanistic understanding of sodium storage from operando stress measurements in hard-carbon thin films',a:'<b>Pakhare</b>, Karan, Guduru',s:'sub',first:1,area:'Na-ion',pre:'https://www.mechanicsarxiv.org/index.php/engineering/preprint/view/113'},
  {t:'Microneedle puncture criteria for ex vivo bacteria-infected porcine skin tissue',a:'McCall, <b>Pakhare</b>, Shin, Jiang, Guduru, Shukla',s:'sub',area:'Biomaterials'},
  {t:'Evolution of porcine skin viscoelasticity during biofilm formation: experiments and modeling',a:'McCall, Alkhoury, <b>Pakhare</b>, Guduru, Srivastava, Shukla',s:'prep',area:'Biomaterials'},
  {t:'Reversible lithium dendrite shorting and healing in solid electrolytes',a:'<b>Pakhare</b>, Lane, Gan, Karan, Lin, Sheldon, Guduru, Caretta',s:'prep',first:1,area:'Solid-state'},
@@ -6763,7 +6765,7 @@ const PUBS=[
     if(p.s!=='pub')tags.push('<span class="tag a">'+stLab[p.s]+'</span>');
     const AREAH={'Li-ion':'#research/liquid','Solid-state':'#research/solid','Na-ion':'#research/emerging','Biomaterials':'#research/bio','3D printing':'#research/print','Modeling':'#vis/framework'};
     tags.push(AREAH[p.area]?`<a class="tag lk" href="${AREAH[p.area]}">${p.area} →</a>`:'<span class="tag">'+p.area+'</span>');
-    return `<div class="pb"><div class="n">[${p.id}]</div><div><h4>${p.t}</h4><p>${p.a}${p.j?' · <i>'+p.j+'</i>':''}${p.y?' ('+p.y+')':''}</p><div class="meta">${tags.join('')}${p.doi?`<a class="doi" href="https://doi.org/${p.doi}" target="_blank" rel="noopener">DOI ${p.doi} ↗</a>`:''}</div></div></div>`}
+    return `<div class="pb"><div class="n">[${p.id}]</div><div><h4>${p.t}</h4><p>${p.a}${p.j?' · <i>'+p.j+'</i>':''}${p.y?' ('+p.y+')':''}</p><div class="meta">${tags.join('')}${p.doi?`<a class="doi" href="https://doi.org/${p.doi}" target="_blank" rel="noopener">DOI ${p.doi} ↗</a>`:''}${p.pre?`<a class="doi" href="${p.pre}" target="_blank" rel="noopener">Preprint ↗</a>`:''}</div></div></div>`}
   let F='all';
   function draw(){
     const keep=p=>F==='all'||(F==='pub'&&p.s==='pub')||(F==='first'&&p.first)||(F==='prep'&&p.s!=='pub');
@@ -6774,7 +6776,7 @@ const PUBS=[
   document.querySelectorAll('#pbFilter button').forEach(b=>b.onclick=()=>{F=b.dataset.f;document.querySelectorAll('#pbFilter button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
   draw();
   document.getElementById('pbCopy').onclick=()=>{
-    const txt=PUBS.map(p=>`[${p.id}] ${p.a.replace(/<[^>]+>/g,'')}. ${p.t.replace(/<[^>]+>/g,'')}. ${p.j?p.j+' ('+p.y+'). https://doi.org/'+p.doi:(stLab[p.s])}`).join('\n');
+    const txt=PUBS.map(p=>`[${p.id}] ${p.a.replace(/<[^>]+>/g,'')}. ${p.t.replace(/<[^>]+>/g,'')}. ${p.j?p.j+' ('+p.y+'). https://doi.org/'+p.doi:(stLab[p.s]+(p.pre?'. '+p.pre:''))}`).join('\n');
     const m=document.getElementById('pbMsg');
     try{navigator.clipboard.writeText(txt).then(()=>m.textContent='Copied.',()=>m.textContent='Copy blocked by the browser.')}catch(e){m.textContent='Copy blocked by the browser.'}
   };
