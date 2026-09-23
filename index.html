@@ -8101,22 +8101,43 @@ dotChart('jcH',[{x:.3,m:389.04,s:74.07,n:5},{x:.6,m:664.45,s:52.40,n:2},{x:.9,m:
 route();
 </script>
 
-<!-- ---------- GoatCounter ----------
-     Replace MYCODE (3 places below) with your GoatCounter site code.      -->
-<script data-goatcounter="https://MYCODE.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+<!-- ---------- GoatCounter (no third-party JavaScript) ----------
+     Replace MYCODE with your GoatCounter site code (2 places below).
+     Nothing from goatcounter.com executes on this page: visits are
+     recorded with a plain image request, and the footer count is read
+     from a JSON endpoint by the first-party code below.              -->
+<noscript>
+  <img src="https://MYCODE.goatcounter.com/count?p=/" alt="" width="1" height="1"
+       style="position:absolute;left:-9999px">
+</noscript>
 <script>
 (function(){
   var CODE='MYCODE';
-  if(CODE==='MY'+'CODE') return;            // not configured yet: stay hidden
+  if(CODE==='MY'+'CODE') return;             // not configured yet: do nothing
+
+  /* --- record a visit: an image request, no third-party script --- */
+  var last=null;
+  function ping(){
+    var p=location.pathname+(location.hash||'');
+    if(p===last) return;                      // don't double-count
+    last=p;
+    new Image().src='https://'+CODE+'.goatcounter.com/count'
+      +'?p='+encodeURIComponent(p)
+      +'&t='+encodeURIComponent(document.title)
+      +'&rnd='+Math.random();
+  }
+  window.addEventListener('hashchange',ping);
+  ping();
+
+  /* --- footer total; hides itself if unavailable --- */
   fetch('https://'+CODE+'.goatcounter.com/counter/TOTAL.json')
     .then(function(r){ if(!r.ok) throw 0; return r.json() })
     .then(function(d){
-      if(!d || !d.count) return;
+      if(!d||!d.count) return;
       document.getElementById('visitCountN').textContent=d.count;
       document.getElementById('visitCount').hidden=false;
     })
-    .catch(function(){ /* counter simply stays hidden */ });
+    .catch(function(){});
 })();
 </script>
 <script>
