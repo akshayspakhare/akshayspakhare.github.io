@@ -573,6 +573,27 @@ footer details.credits ul{padding-left:18px;margin:10px 0}
 footer details.credits li{margin:0 0 8px}
 footer details.credits a,footer details.credits span{font-family:inherit;font-size:inherit;letter-spacing:0;text-transform:none;color:var(--white);text-decoration:underline}
 .built .ff-cr{font-size:11.5px;line-height:1.45}
+/* ---------- site search ---------- */
+.navr{display:flex;align-items:center;gap:6px;flex:none}
+.srch-btn{background:none;border:0;width:40px;height:40px;display:grid;place-items:center;cursor:pointer;color:var(--white);opacity:.85}
+.srch-btn:hover{opacity:1}
+.srch{position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);display:flex;justify-content:center;align-items:flex-start;padding:10vh 16px 16px}
+.srch-box{width:min(760px,100%);max-height:78vh;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line)}
+.srch-in{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);color:var(--grey)}
+.srch-in input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--white);font-family:var(--body);font-size:19px}
+.srch-in input::-webkit-search-cancel-button{display:none}
+.srch-x{background:none;border:1px solid var(--line);color:var(--grey);font-family:var(--mono);font-size:11px;padding:3px 7px;cursor:pointer}
+.srch-n{margin:0;padding:10px 18px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.srch-r{list-style:none;margin:0;padding:0 0 8px;overflow-y:auto}
+.srch-r a{display:block;padding:12px 18px;text-decoration:none;border-left:2px solid transparent}
+.srch-r a[aria-selected="true"],.srch-r a:hover{background:#141518;border-left-color:var(--red)}
+.srch-r .pg{display:block;font-family:var(--head);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.srch-r .hd{display:block;font-family:var(--head);font-size:19px;font-weight:600;letter-spacing:.02em;color:var(--white);margin:2px 0}
+.srch-r .sn{display:block;font-size:14px;line-height:1.5;color:var(--grey)}
+.srch-r mark{background:none;color:var(--white);font-weight:600;box-shadow:inset 0 -2px 0 var(--red)}
+.srch-hit{animation:srchHit 2.2s ease-out}
+@keyframes srchHit{0%,35%{outline:2px solid var(--red);outline-offset:6px}100%{outline:2px solid transparent;outline-offset:6px}}
+@media (max-width:640px){.srch{padding-top:12px}.srch-box{max-height:88vh}.srch-in input{font-size:17px}}
 </style>
 </head>
 <body>
@@ -1211,7 +1232,10 @@ footer a:hover{color:var(--white)}
       <li><a href="#collaboration">Collaboration</a></li>
       <li><a class="hl" href="#publications">CV &amp; Publications</a></li>
     </ul>
-    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><i></i></button>
+    <div class="navr">
+      <button class="srch-btn" id="srchBtn" type="button" aria-label="Search this site" aria-haspopup="dialog" title="Search (/)"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><i></i></button>
+    </div>
   </div>
 </header>
 <div class="drawer" id="drawer" hidden>
@@ -1236,6 +1260,17 @@ footer a:hover{color:var(--white)}
   </div>
 </div>
 
+<div class="srch" id="srch" role="dialog" aria-modal="true" aria-label="Search this site" hidden>
+  <div class="srch-box">
+    <div class="srch-in">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="srchQ" type="search" placeholder="Search research, tutorials, papers, talks…" autocomplete="off" spellcheck="false" aria-controls="srchR" aria-describedby="srchN">
+      <button type="button" class="srch-x" id="srchX" aria-label="Close search">Esc</button>
+    </div>
+    <p class="srch-n" id="srchN" aria-live="polite">Try: fracture toughness, blister, MOSS, Li6PS5Cl, finite element</p>
+    <ol class="srch-r" id="srchR"></ol>
+  </div>
+</div>
 <main>
 <!-- ================= HOME ================= -->
 <div data-view="home">
@@ -8186,6 +8221,82 @@ route();
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',build);
   else build();
+})();
+</script>
+<script>
+/* ---------- site search: indexes every page of the site in the browser ---------- */
+(function(){
+  const box=document.getElementById('srch'),q=document.getElementById('srchQ'),list=document.getElementById('srchR'),note=document.getElementById('srchN');
+  if(!box)return;
+  const NAMES={home:'Home',plan:'Plan',execution:'Execution',publications:'CV & Publications',research:'Research',teaching:'Teaching',service:'Service',mentorship:'Mentorship',collaboration:'Collaboration',tutorials:'Open science',codes:'Codes',talks:'Talks','res-materials':'Research · Materials','res-vision':'Vision'};
+  const sub='₀₁₂₃₄₅₆₇₈₉',sup='⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const norm=t=>t.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[₀-₉]/g,c=>sub.indexOf(c)).replace(/[⁰¹²³⁴-⁹]/g,c=>sup.indexOf(c)).replace(/[⁺]/g,'+').replace(/[–—]/g,'-').toLowerCase();
+  const clean=t=>t.replace(/\s+/g,' ').trim();
+  const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const hashFor=v=>v.startsWith('tut-')?'#tutorial/'+v.slice(4):v==='res-materials'?'#research/materials':v==='res-vision'?'#research/vision':v.startsWith('res-')?'#research/'+v.slice(4):v==='plan'?'#roadmap':v==='execution'?'#record':'#'+v;
+  let IDX=null;
+  function pageName(v){const n=v.dataset.view;if(NAMES[n])return NAMES[n];
+    const h=v.querySelector('.tut-head h3,.panel h1,h1,h3');const t=h?clean(h.textContent):n;
+    return (n.startsWith('tut-')?'Tutorial · ':n.startsWith('res-')?'Research · ':'')+t}
+  function build(){IDX=[];
+    document.querySelectorAll('[data-view]').forEach(v=>{
+      const name=v.dataset.view,page=pageName(v);let head=page;
+      v.querySelectorAll('h1,h2,h3,h4,h5,p,li,td,figcaption,dt,dd,summary').forEach(el=>{
+        if(el.closest('nav,.subnav,.ff-bar,button,.srch,script,style'))return;
+        const isH=/^H[1-5]$/.test(el.tagName);
+        if(!isH&&el.querySelector('p,li,td,h1,h2,h3,h4,h5,figcaption'))return;
+        const t=clean(el.textContent);if(t.length<3)return;
+        if(isH)head=t;
+        IDX.push({v:name,page,head,text:t,el,isH,n:norm(head+' '+(isH?'':t)),nh:norm(head)});
+      });
+    });
+  }
+  function snippet(t,terms){const n=norm(t);let at=-1;for(const w of terms){const i=n.indexOf(w);if(i>=0&&(at<0||i<at))at=i}
+    let a=Math.max(0,at-70),b=Math.min(t.length,(at<0?0:at)+150);if(a>0){const sp=t.indexOf(' ',a);if(sp>0&&sp<at)a=sp+1}
+    let out=t.slice(a,b),nn=norm(out),html='',k=0;
+    const marks=[];terms.forEach(w=>{let i=0;while((i=nn.indexOf(w,i))>=0){marks.push([i,i+w.length]);i+=w.length}});
+    marks.sort((x,y)=>x[0]-y[0]).forEach(([s,e])=>{if(s<k)return;html+=esc(out.slice(k,s))+'<mark>'+esc(out.slice(s,e))+'</mark>';k=e});
+    html+=esc(out.slice(k));return (a>0?'… ':'')+html+(b<t.length?' …':'')}
+  let res=[],sel=-1;
+  function search(){const raw=q.value.trim();list.innerHTML='';sel=-1;res=[];
+    if(raw.length<2){note.textContent='Try: fracture toughness, blister, MOSS, Li6PS5Cl, finite element';return}
+    if(!IDX)build();
+    const terms=norm(raw).split(/\s+/).filter(Boolean),phrase=norm(raw);
+    const seen=new Map();
+    IDX.forEach(r=>{if(!terms.every(w=>r.n.includes(w)))return;
+      let sc=0;terms.forEach(w=>{if(r.nh.includes(w))sc+=3});if(r.n.includes(phrase))sc+=3;if(r.isH)sc+=2;if(norm(r.page).includes(terms[0]))sc+=1;
+      const key=r.v+'|'+r.head;const c=seen.get(key)||0;if(c>=2)return;seen.set(key,c+1);
+      res.push({r,sc})});
+    res.sort((a,b)=>b.sc-a.sc);res=res.slice(0,40);
+    note.textContent=res.length?res.length+(res.length===40?'+':'')+' result'+(res.length===1?'':'s'):'No results for “'+raw+'”';
+    list.innerHTML=res.map(({r},i)=>'<li><a href="'+hashFor(r.v)+'" data-i="'+i+'" role="option"><span class="pg">'+esc(r.page)+'</span><span class="hd">'+snippetHead(r,terms)+'</span>'+(r.isH?'':'<span class="sn">'+snippet(r.text,terms)+'</span>')+'</a></li>').join('');
+  }
+  function snippetHead(r,terms){const h=r.head.length>110?r.head.slice(0,110)+'…':r.head;return snippet(h,terms).replace(/^… | …$/g,'')}
+  function mark(i){const as=list.querySelectorAll('a');as.forEach((a,j)=>a.setAttribute('aria-selected',j===i));sel=i;if(as[i])as[i].scrollIntoView({block:'nearest'})}
+  function go(i){const r=res[i]&&res[i].r;if(!r)return;close();
+    const show=()=>{let el=r.el;const d=el.closest('details');if(d)d.open=true;
+      let t=el;while(t&&t!==document.body&&!t.getClientRects().length)t=t.parentElement;
+      if(!t||t===document.body)return;
+      t.scrollIntoView({block:'center'});t.classList.remove('srch-hit');void t.offsetWidth;t.classList.add('srch-hit');setTimeout(()=>t.classList.remove('srch-hit'),2300)};
+    const h=hashFor(r.v);if(location.hash!==h){location.hash=h;setTimeout(show,150)}else show()}
+  let last=null;
+  function open(){last=document.activeElement;box.hidden=false;document.body.style.overflow='hidden';q.focus();q.select();if(typeof closeMenu==='function')closeMenu()}
+  function close(){box.hidden=true;document.body.style.overflow='';if(last&&last.focus)last.focus()}
+  document.getElementById('srchBtn').addEventListener('click',open);
+  document.getElementById('srchX').addEventListener('click',close);
+  box.addEventListener('click',e=>{if(e.target===box)close()});
+  list.addEventListener('click',e=>{const a=e.target.closest('a[data-i]');if(!a||e.metaKey||e.ctrlKey||e.shiftKey)return;e.preventDefault();go(+a.dataset.i)});
+  let tm;q.addEventListener('input',()=>{clearTimeout(tm);tm=setTimeout(search,90)});
+  q.addEventListener('keydown',e=>{const n=list.querySelectorAll('a').length;
+    if(e.key==='ArrowDown'){e.preventDefault();if(n)mark((sel+1)%n)}
+    else if(e.key==='ArrowUp'){e.preventDefault();if(n)mark((sel-1+n)%n)}
+    else if(e.key==='Enter'){e.preventDefault();go(sel>=0?sel:0)}});
+  addEventListener('keydown',e=>{
+    if(!box.hidden){if(e.key==='Escape'){e.preventDefault();close()}
+      else if(e.key==='Tab'){const f=[q,...list.querySelectorAll('a'),document.getElementById('srchX')];const i=f.indexOf(document.activeElement);if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&i===f.length-1){e.preventDefault();q.focus()}}
+      return}
+    const typing=/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'')||(document.activeElement&&document.activeElement.isContentEditable);
+    if((e.key==='/'&&!typing)||((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k')){e.preventDefault();open()}});
 })();
 </script>
 </body>
